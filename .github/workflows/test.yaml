@@ -1,0 +1,28 @@
+name: Automated Tests
+
+on:
+  push:
+    branches: [ master, main ]
+  schedule:
+    - cron: '0 15 * * 4'  # Thursday 3 PM
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Run Maven tests
+        run: mvn test -DsuiteXmlFile=testNG.xml
+      - name: Publish test results
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        with:
+          files: target/surefire-reports/*.xml
