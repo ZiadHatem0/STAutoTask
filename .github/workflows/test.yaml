@@ -20,9 +20,11 @@ jobs:
           distribution: 'temurin'
 
       - name: Run Maven tests
-        run: mvn test -DsuiteXmlFile=testNG.xml
+        run: mvn test -Dtestng.suites=testNG.xml
       - name: Publish test results
         if: always()
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: dorny/test-reporter@v1
         with:
-          files: target/surefire-reports/*.xml
+          name: Test Results
+          path: 'target/surefire-reports/*.xml'
+          reporter: 'java-junit'
