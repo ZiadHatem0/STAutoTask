@@ -55,7 +55,10 @@ jobs:
           echo "SOCKS5 proxy running on 127.0.0.1:1080"
 
       - name: Verify connectivity through VPN
-        run: curl --socks5 127.0.0.1:1080 --max-time 30 -o /dev/null -w "HTTP status: %{http_code}\n" "https://storefront-consumer-frontend-store-front-dev.skynodes.dev/"
+        run: |
+          curl --socks5 127.0.0.1:1080 --max-time 30 -o /dev/null \
+            -w 'HTTP status: %{http_code}\n' \
+            'https://storefront-consumer-frontend-store-front-dev.skynodes.dev/'
 
       - name: Run Maven tests
         env:
