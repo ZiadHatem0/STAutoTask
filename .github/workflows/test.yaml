@@ -19,6 +19,16 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      - name: Check site connectivity
+        run: |
+          $response = try { Invoke-WebRequest -Uri "https://storefront-consumer-frontend-store-front-dev.skynodes.dev/" -TimeoutSec 30 -UseBasicParsing } catch { $null }
+          if ($null -eq $response) {
+            Write-Error "❌ Cannot reach the target URL. The server may be down or behind a private network."
+            exit 1
+          }
+          Write-Host "✅ Site is reachable (status: $($response.StatusCode))"
+        shell: pwsh
+
       - name: Run Maven tests
         run: mvn test "-Dtestng.suites=testNG.xml"
       - name: Publish test results
