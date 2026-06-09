@@ -73,11 +73,17 @@ pipeline {
             bat 'taskkill /F /IM chrome.exe /T >nul 2>&1 & exit /b 0'
             bat 'taskkill /F /IM chromedriver.exe /T >nul 2>&1 & exit /b 0'
 
-            cleanWs(
-                deleteDirs           : true,
-                disableDeferredWipeout: true,
-                notFailBuild         : true
-            )
+            script {
+                try {
+                    cleanWs(
+                        deleteDirs            : true,
+                        disableDeferredWipeout: true,
+                        notFailBuild          : true
+                    )
+                } catch (Exception e) {
+                    echo "Workspace cleanup warning (non-fatal): ${e.message}"
+                }
+            }
         }
 
         success {
